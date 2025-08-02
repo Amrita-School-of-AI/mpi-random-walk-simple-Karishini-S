@@ -78,10 +78,6 @@ void walker_process()
             break;
         }
     }
-    if(steps > max_steps) {
-        std::cout << "Rank" << world_rank << "Reached max steps but domain is not reached" << std::endl;
-        MPI_Send(&message, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
-    }
 }
 
 void controller_process()
@@ -98,8 +94,6 @@ void controller_process()
     int walker_process_finished = 0;
     for(int process = 1; process <= world_size - 1; process++) {
         MPI_Recv(&message, 1, MPI_INT, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        if(message == 1) walker_process_finished+=1;
     }
-    if (walker_process_finished == world_size - 1) std::cout << "Controller: All " << world_size - 1 << " walkers have finished." << std::endl;
-    else std::cout << "Controller: " << walker_process_finished << " have finished out of " << world_size - 1 << std::endl;
+    std::cout << "Controller: All " << world_size - 1 << " walkers have finished." << std::endl;
 }
